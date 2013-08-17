@@ -151,14 +151,14 @@ Tokenizer.prototype.checkCharAndToke = function(check) {
 	if(this.c != check) {
 		throw ["E002", util.format("syntax %s: unexpected '%s'; expected '%s'.", this.errPrefix(), this.c, check)];
 	}
-	return this.toke();
+	this.toke();
 };
 
 Tokenizer.prototype.checkTypeAndToke = function(check) {
 	if(this.tok_type != check) {
 		throw ["E003", util.format("syntax %s: unexpected %s; expected %s.", this.errPrefix(), this.tok_type, check)];
 	}
-	return this.toke();
+	this.toke();
 };
 
 module.exports.New = function(src) {
