@@ -111,6 +111,7 @@ Tokenizer.prototype.toke = function() {
 				throw ["E005", util.format("syntax %s: unexpected '%s'; expected digit.", this.errPrefix(), this.c)];
 			}
 		}
+		this.val = Number(this.val);
 	} else {
 		// perharps an operator, or maybe an identifier
 		this.tok_type = "op";
@@ -142,6 +143,28 @@ Tokenizer.prototype.toke = function() {
 			}
 			if(this.val == "") {
 				throw ["E008", util.format("syntax %s: unexpected %s", this.errPrefix(), this.c)];
+			}
+			switch(this.val) {
+			case "null":
+				this.tok_type = "constant";
+				this.val = null;
+				break;
+			case "true":
+				this.tok_type = "constant";
+				this.val = true;
+				break;
+			case "false":
+				this.tok_type = "constant";
+				this.val = false;
+				break;
+			case "let":
+				this.tok_type = "let";
+				break;
+			case "f":
+			case "function":
+				this.tok_type = "f";
+				this.val = "f";
+				break;
 			}
 		}
 	}
