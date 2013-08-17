@@ -67,7 +67,7 @@ Tokenizer.prototype.toke = function() {
 		// (which it has). So, for now, no need to double-escape. It's also impossible to include '"' in your strings, but hush, we'll come back and fix this later.
 		for(this.step(); this.c != '"'; this.step()) {
 			if(this.over) {
-				throw ["E007", util.format("syntax %s: unexpected end of stream; expected '\"'.", this.errPrefix(), this.c)];
+				throw new Error("E007" + util.format("syntax %s: unexpected end of stream; expected '\"'.", this.errPrefix(), this.c));
 			}
 			this.val += this.c;
 		}
@@ -92,7 +92,7 @@ Tokenizer.prototype.toke = function() {
 				haveDigits = true;
 			}
 			if(!haveDigits) {
-				throw ["E006", util.format("syntax %s: unexpected '%s'; expected digit.", this.errPrefix(), this.c)];
+				throw new Error("E006" + util.format("syntax %s: unexpected '%s'; expected digit.", this.errPrefix(), this.c));
 			}
 		}
 		if(this.c == "e" || this.c == "E") {
@@ -108,7 +108,7 @@ Tokenizer.prototype.toke = function() {
 				haveDigits = true;
 			}
 			if(!haveDigits) {
-				throw ["E005", util.format("syntax %s: unexpected '%s'; expected digit.", this.errPrefix(), this.c)];
+				throw new Error("E005" + util.format("syntax %s: unexpected '%s'; expected digit.", this.errPrefix(), this.c));
 			}
 		}
 		this.val = Number(this.val);
@@ -125,12 +125,12 @@ Tokenizer.prototype.toke = function() {
 			if(this.c.match(opSuffix)) {
 				this.val += this.c
 				if(!this.val.match(twoCharOp)) {
-					throw ["E004", util.format("syntax %s: unexpected %s", this.errPrefix(), this.c)];
+					throw new Error("E004" + util.format("syntax %s: unexpected %s", this.errPrefix(), this.c));
 				}
 				this.step(); // consume second character
 			} else {
 				if(!this.val.match(trickyOneCharOp)) {
-					throw ["E001", util.format("syntax %s: unexpected %s", this.errPrefix(), this.c)];
+					throw new Error("E001" + util.format("syntax %s: unexpected %s", this.errPrefix(), this.c));
 				}
 			}
 		} else {
@@ -142,7 +142,7 @@ Tokenizer.prototype.toke = function() {
 				this.val += this.c;
 			}
 			if(this.val == "") {
-				throw ["E008", util.format("syntax %s: unexpected %s", this.errPrefix(), this.c)];
+				throw new Error("E008" + util.format("syntax %s: unexpected %s", this.errPrefix(), this.c));
 			}
 			switch(this.val) {
 			case "null":
@@ -172,14 +172,14 @@ Tokenizer.prototype.toke = function() {
 
 Tokenizer.prototype.checkCharAndToke = function(check) {
 	if(this.c != check) {
-		throw ["E002", util.format("syntax %s: unexpected '%s'; expected '%s'.", this.errPrefix(), this.c, check)];
+		throw new Error("E002" + util.format("syntax %s: unexpected '%s'; expected '%s'.", this.errPrefix(), this.c, check));
 	}
 	this.toke();
 };
 
 Tokenizer.prototype.checkTypeAndToke = function(check) {
 	if(this.tok_type != check) {
-		throw ["E003", util.format("syntax %s: unexpected %s; expected %s.", this.errPrefix(), this.tok_type, check)];
+		throw new Error("E003" + util.format("syntax %s: unexpected %s; expected %s.", this.errPrefix(), this.tok_type, check));
 	}
 	this.toke();
 };
