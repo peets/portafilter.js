@@ -1,0 +1,5 @@
+Portafilter does one thing: it evaluates an expression and returns a value. An expression can be evaluated on different implementations
+across multiple languages and will always return the same result. This makes it possible to re-use the same semantics in separate application tiers,
+and that's really quite rad.
+
+This is the JavaScript implementation of Portafilter. Well, it will be, soon.
