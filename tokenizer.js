@@ -1,11 +1,10 @@
 var util = require('util');
 
 var one2nine = /[1-9]/;
-var obviousOneCharOp = /[\{\}\[\]\(\)\:\.\+\-\*\/%\?]/;
+var obviousOneCharOp = /[\{\}\[\]\(\)\:\.,\+\-\*\/%\?]/;
 var opPrefix = /[><=!&\|]/;
 var opSuffix = /[=&\|]/;
 var twoCharOp = /&&|\|\||==|!=|<=|>=/;
-var trickyOneCharOp = /[><!]/;
 var identStart = /[$_A-Za-z]/;
 var identContinue = /[$_A-Za-z0-9]/;
 
@@ -128,10 +127,6 @@ Tokenizer.prototype.toke = function() {
 					throw new Error("E004" + util.format("syntax %s: unexpected %s", this.errPrefix(), this.c));
 				}
 				this.step(); // consume second character
-			} else {
-				if(!this.val.match(trickyOneCharOp)) {
-					throw new Error("E001" + util.format("syntax %s: unexpected %s", this.errPrefix(), this.c));
-				}
 			}
 		} else {
 			// must be an identifier then
@@ -142,7 +137,7 @@ Tokenizer.prototype.toke = function() {
 				this.val += this.c;
 			}
 			if(this.val == "") {
-				throw new Error("E008" + util.format("syntax %s: unexpected %s", this.errPrefix(), this.c));
+				throw new Error("E008 " + util.format("syntax %s: unexpected %s", this.errPrefix(), this.c));
 			}
 			switch(this.val) {
 			case "null":
@@ -168,18 +163,21 @@ Tokenizer.prototype.toke = function() {
 			}
 		}
 	}
+	while(this.c.match(/^\s$/)) {
+		this.step();
+	}
 };
 
-Tokenizer.prototype.checkCharAndToke = function(check) {
-	if(this.c != check) {
-		throw new Error("E002" + util.format("syntax %s: unexpected '%s'; expected '%s'.", this.errPrefix(), this.c, check));
+Tokenizer.prototype.checkValAndToke = function(check) {
+	if(this.val != check) {
+		throw new Error("E002 " + util.format("syntax %s: unexpected '%s'; expected '%s'.", this.errPrefix(), this.c, check));
 	}
 	this.toke();
 };
 
 Tokenizer.prototype.checkTypeAndToke = function(check) {
 	if(this.tok_type != check) {
-		throw new Error("E003" + util.format("syntax %s: unexpected %s; expected %s.", this.errPrefix(), this.tok_type, check));
+		throw new Error("E003 " + util.format("syntax %s: unexpected %s; expected %s.", this.errPrefix(), this.tok_type, check));
 	}
 	this.toke();
 };
