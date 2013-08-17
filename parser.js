@@ -136,8 +136,9 @@ function fNud(t) {
 	t.checkValAndToke("{");
 	var body = parse(t, 0);
 	t.checkValAndToke("}");
-	var n = new tree.Node(this.whereAt, new tree.Op("f", [aN, body]));
+	var n = new tree.Node(this.whereAt, new tree.Func(this.whereAt, aN, body));
 	aN.parent = body.parent = n;
+	body.f = n.value;
 	return n;
 }
 
@@ -273,21 +274,13 @@ function getParselet(t) {
 }
 
 var parse = function(t, rbp) {
-//	console.log("parse(t, %d)", rbp);
 	p = getParselet(t);
-//	console.log("parselet => %o", p);
-//	console.log("pre toke t.val => ", t.c);
 	t.toke();
-//	console.log("post toke t.val => ", t.c);
 	left = p.nud(t);
-//	console.log("pre-loop left => %o", left);
 	for(p = getParselet(t); p && rbp < p.lbp; p = getParselet(t)) {
-//		console.log("led parselet => %o", p);
 		t.toke();
 		left = p.led(t, left);
-//		console.log("so I never make it here");
 	}
-//	console.log("post-loop left => %o", left);
 	return left;
 };
 

@@ -25,6 +25,10 @@ var Func = function(name, argNames, body) {
 	}
 };
 
+Func.prototype.serialize = function(exprefix) {
+	return [exprefix, "f", this.args.serialize(exprefix), (this.body ? this.body.serialize(exprefix) : this.name)];
+}
+
 Node.prototype.serialize = function(exprefix) {
 	if(typeof this.value === 'undefined') {
 		if(typeof this.evald === 'undefined') {
@@ -49,7 +53,6 @@ Node.prototype.serialize = function(exprefix) {
 			case "given":
 			case ".":
 			case "`":
-			case "f":
 				if(this.value.args.length != 2) {
 					throw new Error("E013 BUG: " + this.value + " is '" + this.value.op + "' but doesn't have exactly two args");
 				}
@@ -57,6 +60,9 @@ Node.prototype.serialize = function(exprefix) {
 			default:
 				throw new Error("E012 BUG: " + this.value + " has a bad op type");
 		}
+	}
+	if(this.value instanceof Func) {
+		return this.value.serialize(exprefix);
 	}
 	if(this.value instanceof Object) {
 		var ret = {};
@@ -84,15 +90,21 @@ Node.prototype.resolve = function(name, globals, args) {
 					return v;
 				}
 			}
-		} else if(cur.f) {
+		} else {
+			var v = cur.value[name];
+			if(typeof v !== "undefined") {
+				return v.eval(globals, args);
+			}
+		}
+		if(cur.f) {
 			// function body root -> check if argument matches
-			var f = cur.f.eval(globals, args);
-			for(var i = 0; i < f.args.length; i++) {
-				if(f.args[i] == name) {
+			var argNames = cur.f.args.evald;
+			for(var i = 0; i < argNames.length; i++) {
+				if(argNames[i] == name) {
 					if(i < args.length) {
 						return args[i];
 					} else {
-						throw new Error("E025", util.format("argument %s was not provided when function %s was called", name, f.name));
+						throw new Error("E025", util.format("argument %s was not provided when function %s was called", name, cur.f.name));
 						// to avoid this error, supply all arguments or provide default argument values like so:
 						//
 						//     f(a, b, c) {
@@ -104,10 +116,6 @@ Node.prototype.resolve = function(name, globals, args) {
 					}
 				}
 			}
-		}
-		var v = cur.value[name];
-		if(typeof v !== "undefined") {
-			return v.eval(globals, args);
 		}
 	}
 	var v = globals[name];
@@ -133,10 +141,10 @@ Node.prototype.select = function(collection, key) {
 };
 
 Node.prototype.eval = function(globals, args) {
-	if(this.evaling) {
-		throw new Error("E019 dependency loop at " + this.path);
-	}
 	if(typeof this.evald === "undefined") {
+		if(this.evaling) {
+			throw new Error("E019 dependency loop at " + this.path);
+		}
 		this.evaling = true;
 		if(this.value instanceof Array) {
 			this.evald = [];
@@ -169,7 +177,7 @@ Node.prototype.eval = function(globals, args) {
 				case "`":
 					var func = this.value.args[0].eval(globals, args);
 					if(!(func instanceof Func)) {
-						throw new Error(util.format("E022 function call error at %s: that's not a function!", this.value.args[0].path));
+						throw new Error(util.format("E022 function call error at %s: that's not a function! (It's %j)", this.value.args[0].path, func));
 					}
 					var ourArgs = this.value.args[1].eval(globals, args);
 					if(!(ourArgs instanceof Array)) {
