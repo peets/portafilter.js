@@ -10,5 +10,11 @@ buster.testCase("eval tire kick", {
 		var n = parser.parse(t, 0);
 		var v = n.eval(lib, []);
 		assert.same(v, 3);
+	},
+	"vars": function() {
+		var t = tokenizer.New("let(a = 42) a");
+		var n = parser.parse(t, 0);
+		var v = n.eval(lib, []);
+		assert.same(v, 42);
 	}
 });

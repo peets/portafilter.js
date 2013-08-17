@@ -81,7 +81,7 @@ Node.prototype.resolve = function(name, globals, args) {
 				var bindings = cur.value.args[0].eval(globals, args);
 				var v = bindings[name];
 				if(typeof v !== "undefined") {
-					return v.eval(globals, args);
+					return v;
 				}
 			}
 		} else if(cur.f) {
@@ -149,7 +149,7 @@ Node.prototype.eval = function(globals, args) {
 		} else if(this.value instanceof Op) {
 			switch(this.value.op) {
 				case "given":
-					this.evald = this.args[1].eval(globals, args); // we didn't forget about the bindings; resolve will examine args[0] if / when the time comes.
+					this.evald = this.value.args[1].eval(globals, args); // we didn't forget about the bindings; resolve will examine args[0] if / when the time comes.
 					break;
 				case "~":
 					var name = this.value.args[0].eval(globals, args);
