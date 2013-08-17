@@ -1,0 +1,16 @@
+{
+	"name": "portafilter.js",
+	"version": "0.0.1",
+	"description": "JavaScript implementation of portafilter",
+	"keywords": ["portafilter", "expression", "filter", "query", "evaluate", "sunshine", "lollipops"],
+	"license": "BSD",
+	"author": "Pierre-Paul Paquin",
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/peets/portafilter.js.git"
+	},
+
+	"devDependencies": {
+		"buster": "~0.6.12"
+	}
+}
