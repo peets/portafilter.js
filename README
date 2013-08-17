@@ -18,7 +18,26 @@ Here's what it can do right now:
 
 Here's what it'll be able to do soon:
 
-	user.age > 18 ? "beer" : "water" // just need to add the ">" and "?" functions to the std lib (they already parse)
+	// just need to add the ">" and "?" functions to the std lib (they already parse)
+	user.age > 18 ? "beer" : "water"
 
-	let(youngPopular = users.filter(f(u) { tweets.length < 100 && followers.length > 10000 }))
-		map(youngPopular, f(u) { u.username }) // functions are first-class citizens already
+	// functions are first-class citizens
+	let(youngPopular = users.filter(f(u) {
+		tweets.length < 100 && followers.length > 10000
+		}))
+		map(youngPopular, f(u) {
+			u.username
+		})
+
+Oh, ALSO: you can already do this: you can serialize expression to JSON.
+
+	expr("1 + 2").serialize("X") => ["X", "`", ["X", "~", "+"], [1, 2]]
+
+This means you can embed Portafiler expressions directly in JSON documents:
+
+	var foo = {
+		"class": "character",
+		"fields": ["str", "dex", "con", "int", "wis", "cha"],
+		"check": expr("map(fields, f(stat) { stat > 7 && stat < 13 })").serialize(uuid)
+	};
+	www.post(server, foo);
