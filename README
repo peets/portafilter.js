@@ -5,3 +5,20 @@ and that's really quite rad.
 This is the JavaScript implementation of Portafilter. The standard lib is pretty bare at the moment, but it's the easiest part to build.
 
 SO: in <12hrs I wrote & tested this implementation from scratch. I guess this shows that it's an easy-to-port language!
+
+Here's what it can do right now:
+
+	// the only function I implemented is "+"... 'let' and 'f' are language constructs
+	1 + 2  // 3
+	let(a = 1, b = 2) a + b  // 3
+	f(a, b) { a + b }(1, 2)  // 3
+
+	let(a = 40 + 2, b = 13) let(c = a + b) c + 5  // 60
+
+
+Here's what it'll be able to do soon:
+
+	user.age > 18 ? "beer" : "water" // just need to add the ">" and "?" functions to the std lib (they already parse)
+
+	let(youngPopular = users.filter(f(u) { tweets.length < 100 && followers.length > 10000 }))
+		map(youngPopular, f(u) { u.username }) // functions are first-class citizens already
