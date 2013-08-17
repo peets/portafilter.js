@@ -2,4 +2,6 @@ Portafilter does one thing: it evaluates an expression and returns a value. An e
 across multiple languages and will always return the same result. This makes it possible to re-use the same semantics in separate application tiers,
 and that's really quite rad.
 
-This is the JavaScript implementation of Portafilter. Well, it will be, soon.
+This is the JavaScript implementation of Portafilter. The standard lib is pretty bare at the moment, but it's the easiest part to build.
+
+SO: in <12hrs I wrote & tested this implementation from scratch. I guess this shows that it's an easy-to-port language!
