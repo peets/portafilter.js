@@ -142,13 +142,13 @@ Node.prototype.select = function(collection, key) {
 		if(ok && key >= 0 && key < collection.length) {
 			return collection[key];
 		}
-		throw new Error(util.format("E022 member selection error at %s: array %j has no element at index %s", this.path, collection, key));
+		throw new Error(util.format("E026 member selection error at %s: array %j has no element at index %s", this.path, collection, key));
 	}
 	var r = collection[key];
 	if(typeof collection !== "undefined") {
 		return r;
 	}
-	throw new Error(util.format("E023 member selection error at %s: object %j has no property named %s", this.path, collection, key));
+	throw new Error(util.format("E027 member selection error at %s: object %j has no property named %s", this.path, collection, key));
 };
 
 Node.prototype.eval = function(globals, args) {
