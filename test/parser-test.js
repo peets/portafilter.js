@@ -72,6 +72,10 @@ buster.testCase("parser tire kick", {
 		var n = parser.parse(t, 0);
 		var s = n.serialize("X");
 		assert.equals(["X", "given", {"a": ["X", "`", ["X", "~", "+"], [40, 2]]}, ["X", "~", "a"]], s);
+		var t = tokenizer.New("let (c = f(a, b) { a + b }) c(1, 2)");
+		var n = parser.parse(t, 0);
+		var s = n.serialize("X");
+		assert.equals(["X", "given", {"c": ["X", "f", ["a", "b"], ["X", "`", ["X", "~", "+"], [["X", "~", "a"], ["X", "~", "b"]]]]}, ["X", "`", ["X", "~", "c"], [1, 2]]], s);
 	},
 	"f": function() {
 		var t = tokenizer.New("f(a, b) { false }");

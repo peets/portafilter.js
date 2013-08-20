@@ -190,7 +190,7 @@ function callLed(t, left) {
 	}
 	t.checkValAndToke(")");
 	var n = new tree.Node(this.whereAt, new tree.Op("`", [left, aN]));
-	aN.parent = n;
+	left.parent = aN.parent = n;
 	return n;
 }
 

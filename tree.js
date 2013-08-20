@@ -76,7 +76,6 @@ Node.prototype.serialize = function(exprefix) {
 
 Node.prototype.resolve = function(name, globals, args) {
 	for(var cur = this; cur; cur = cur.parent) {
-		// object, array, given, function body root (gulp!)
 		if(cur.value instanceof Array) {
 			var ok = false;
 			if(typeof key === "string" && key.match(/^\d+$/)) {
