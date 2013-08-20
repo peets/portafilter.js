@@ -3,7 +3,7 @@ var tokenizer = require("../tokenizer.js");
 
 buster.testCase("tokenizer tire kick", {
 	"combined": function() {
-		t = tokenizer.New("1 + 2.2 - 3.4e56 * \"abc\" && foo!=$bar / (_baz ? quux0 : ok_I_get_it) true false null function let");
+		t = tokenizer.New("1 + 2.2 - 3.4e56 * \"abc\" && foo!=$bar / (_baz ? quux0 : ok_I.get_it) true false null function let");
 		assert.same(t.tok_type, "number");
 		assert.same(t.val, 1);
 		t.toke();
@@ -56,7 +56,13 @@ buster.testCase("tokenizer tire kick", {
 		assert.same(t.val, ":");
 		t.toke();
 		assert.same(t.tok_type, "name");
-		assert.same(t.val, "ok_I_get_it");
+		assert.same(t.val, "ok_I");
+		t.toke();
+		assert.same(t.tok_type, "op");
+		assert.same(t.val, ".");
+		t.toke();
+		assert.same(t.tok_type, "name");
+		assert.same(t.val, "get_it");
 		t.toke();
 		assert.same(t.tok_type, "op");
 		assert.same(t.val, ")");

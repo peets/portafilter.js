@@ -197,11 +197,11 @@ function callLed(t, left) {
 function selectLed(t, left) {
 	var right;
 	if(this.val == "."){
-		if(t.tok_type == "string"){
+		if(t.tok_type == "name"){
 			right = new tree.Node(this.whereAt, t.val);
-			t.checkTypeAndToke("string");
+			t.checkTypeAndToke("name");
 		} else {
-			throw new Error("E018" + util.format("syntax %s: expected identifier.", t.errPrefix()));
+			throw new Error("E018 " + util.format("syntax %s: expected identifier, have %s.", t.errPrefix(), t.tok_type));
 		}
 	} else {
 		right = parse(t, 0);

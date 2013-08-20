@@ -28,6 +28,14 @@ buster.testCase("eval tire kick", {
 		var n = parser.parse(t, 0);
 		var v = n.eval(lib, []);
 		assert.same(v, 60);
+		var t = tokenizer.New('let(foo = {"bar": "baz"}) foo.bar + "ooka"');
+		var n = parser.parse(t, 0);
+		var v = n.eval(lib, []);
+		assert.same(v, "bazooka");
+		var t = tokenizer.New('let(foo = {"bar": {"baz": "ooka"}}) "baz" + foo.bar.baz');
+		var n = parser.parse(t, 0);
+		var v = n.eval(lib, []);
+		assert.same(v, "bazooka");
 	},
 	"functions": function() {
 		var t = tokenizer.New("f(a, b) { a + b }(1, 2)");
