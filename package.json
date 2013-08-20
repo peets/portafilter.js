@@ -11,6 +11,7 @@
 	},
 
 	"devDependencies": {
-		"buster": "~0.6.12"
+		"buster": "~0.6.12",
+		"jshint": "~2.1.10"
 	}
 }

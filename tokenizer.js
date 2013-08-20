@@ -19,7 +19,7 @@ var Tokenizer = function(src) {
 	this.character = 0;
 	this.step(); // read first character
 	this.toke(); // set first token
-}
+};
 
 Tokenizer.prototype.whereAt = function() {
 	if(this.tok_line > 1) {
@@ -110,7 +110,7 @@ Tokenizer.prototype.toke = function() {
 				throw new Error("E005" + util.format("syntax %s: unexpected '%s'; expected digit.", this.errPrefix(), this.c));
 			}
 		}
-		this.val = Number(this.val);
+		this.val = parseFloat(this.val);
 	} else {
 		// perharps an operator, or maybe an identifier
 		this.tok_type = "op";
@@ -122,7 +122,7 @@ Tokenizer.prototype.toke = function() {
 			// potentially a two-character operator
 			this.step();
 			if(this.c.match(opSuffix)) {
-				this.val += this.c
+				this.val += this.c;
 				if(!this.val.match(twoCharOp)) {
 					throw new Error("E004" + util.format("syntax %s: unexpected %s", this.errPrefix(), this.c));
 				}
@@ -136,7 +136,7 @@ Tokenizer.prototype.toke = function() {
 				first = false;
 				this.val += this.c;
 			}
-			if(this.val == "") {
+			if(this.val === "") {
 				throw new Error("E008 " + util.format("syntax %s: unexpected %s", this.errPrefix(), this.c));
 			}
 			switch(this.val) {
@@ -184,4 +184,4 @@ Tokenizer.prototype.checkTypeAndToke = function(check) {
 
 module.exports.New = function(src) {
 	return new Tokenizer(src);
-}
+};

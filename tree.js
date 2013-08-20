@@ -27,7 +27,7 @@ var Func = function(name, argNames, body) {
 
 Func.prototype.serialize = function(exprefix) {
 	return [exprefix, "f", this.args.serialize(exprefix), (this.body ? this.body.serialize(exprefix) : this.name)];
-}
+};
 
 Node.prototype.serialize = function(exprefix) {
 	if(typeof this.value === 'undefined') {
@@ -49,7 +49,7 @@ Node.prototype.serialize = function(exprefix) {
 				if(this.value.args.length != 1) {
 					throw new Error("E014 BUG: " + this.value + " is '~' but doesn't have exactly one arg (args is " + this.value.args.serialize("X") + ")");
 				}
-				return [exprefix, "~", this.value.args[0].serialize(exprefix)]
+				return [exprefix, "~", this.value.args[0].serialize(exprefix)];
 			case "given":
 			case ".":
 			case "`":
@@ -66,7 +66,7 @@ Node.prototype.serialize = function(exprefix) {
 	}
 	if(this.value instanceof Object) {
 		var ret = {};
-		for(k in this.value) {
+		for(var k in this.value) {
 			ret[k] = this.value[k].serialize(exprefix);
 		}
 		return ret;
@@ -78,9 +78,15 @@ Node.prototype.resolve = function(name, globals, args) {
 	for(var cur = this; cur; cur = cur.parent) {
 		// object, array, given, function body root (gulp!)
 		if(cur.value instanceof Array) {
-			var n = Number(name);
-			if(n != NaN && n > 0 && n < cur.value.length) {
-				return cur.value[n].eval(globals, args);
+			var ok = false;
+			if(typeof key === "string" && key.match(/^\d+$/)) {
+				key = parseInt(key, 10);
+				ok = true;
+			} else if(typeof key === "number" && key % 1 === 0) {
+				ok = true;
+			}
+			if(ok && key >= 0 && key < cur.value.length) {
+				return cur.value[key].eval(globals, args);
 			}
 		} else if(cur.value instanceof Op) {
 			if(cur.value.op == "given") {
@@ -123,13 +129,19 @@ Node.prototype.resolve = function(name, globals, args) {
 		return v;
 	}
 	throw new Error(util.format("E024 name resolution error at %s: nothing named '%s' exists in scope.", this.path, name));
-}
+};
 
 Node.prototype.select = function(collection, key) {
 	if(collection instanceof Array) {
-		var n = Number(key);
-		if(n != NaN && n > 0 && n < collection.length) {
-			return collection[n];
+		var ok = false;
+		if(typeof key === "string" && key.match(/^\d$/)) {
+			key = parseInt(key, 10);
+			ok = true;
+		} else if(typeof key === "number" && key % 1 === 0) {
+			ok = true;
+		}
+		if(ok && key >= 0 && key < collection.length) {
+			return collection[key];
 		}
 		throw new Error(util.format("E022 member selection error at %s: array %j has no element at index %s", this.path, collection, key));
 	}

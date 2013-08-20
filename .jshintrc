@@ -1,0 +1,9 @@
+{
+	"node": true,
+	"trailing": true,
+	"funcscope": false,
+	"smarttabs": true,
+	"curly": true,
+	"evil": true,
+	"shadow": true
+}

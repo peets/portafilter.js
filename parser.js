@@ -238,7 +238,7 @@ var ops = {
 	".":  new Parselet(80, defaultNud,    selectLed),
 	"[":  new Parselet(80, openArrayNud,  selectLed),
 };
-for(op in ops) {
+for(var op in ops) {
 	ops[op].val = op;
 }
 
