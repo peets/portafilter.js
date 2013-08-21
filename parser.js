@@ -25,7 +25,7 @@ function valNud(t) {
 
 function prefixNud(t) {
 	var operand = parse(t, this.lbp);
-	var args = new tree.Node(operand.path, [operand]);
+	var args = new tree.Node(operand.whereAt, [operand]);
 	var name = new tree.Node(this.whereAt, this.val);
 	var operator = new tree.Node(this.whereAt, new tree.Op("~", [name]));
 	var n = new tree.Node(this.whereAt, new tree.Op("`", [operator, args]));

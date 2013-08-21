@@ -4,6 +4,5 @@
 	"funcscope": false,
 	"smarttabs": true,
 	"curly": true,
-	"evil": true,
 	"shadow": true
 }

@@ -1,3 +1,4 @@
+/* jshint evil: true */ // because we have a method named eval, and jshint doesn't understand it's not the same as global eval.
 var util = require('util');
 
 var Op = function(op, args) {
@@ -22,6 +23,82 @@ var Func = function(name, argNames, body) {
 		this.hard = body;
 	} else {
 		this.body = body;
+	}
+};
+
+var escapeJSONPointer = function(pointer) {
+	return pointer.replace(/~/g, "~0").replace(/\//g, "~1");
+};
+
+var unserialize = function(s, exprefix, path) {
+	if(!path) {
+		path = "";
+	}
+	if(s instanceof Array) {
+		if(s.length === 0 || s[0] !== exprefix) {
+			var ret = new Node(path ? path : "/", []);
+			for(var i = 0; i < s.length; i++) {
+				ret.value[i] = unserialize(s[i], exprefix, path + "/" + i);
+				ret.value[i].parent = ret;
+			}
+			return ret;
+		} else {
+			if(s.length == 1) {
+				throw new Error("E029 malformed expression at " + path);
+			}
+			var err;
+			switch(s[1]) {
+				case "f":
+					// arg names can be any expression; it's evaluated the first time the function definition is encountered by eval.
+					// that's when we'll check that it's an array and that names don't conflict.
+					if(s.length != 4) {
+						throw new Error("E031 malformed function definition at " + path + "; proper form is [exprefix, \"f\", arguments, body]");
+					}
+					var ret = new Node(path ? path : "/", new Func(path ? path : "/", unserialize(s[2], exprefix, path + "/" + 2), unserialize(s[3], exprefix, path + "/" + 3)));
+					ret.value.args.parent = ret.value.body.parent = ret;
+					return ret;
+				case "~":
+					if(s.length != 3) {
+						throw new Error("E032 malformed name resolution at " + path + "; proper form is [exprefix, \"~\", name]");
+					}
+					var ret = new Node(path ? path : "/", new Op(s[1], [unserialize(s[2], exprefix, path + "/" + 2)]));
+					ret.value.args[0].parent = ret;
+					return ret;
+				case "`":
+					err = "E033 malformed function call at " + path + "; proper form is [exprefix, \"`\", function, arguments]";
+				/* jshint -W086 */ // jshint doesn't like it when we fallthrough to the next case
+				case "given":
+					if(!err) {
+						err = "E034 malformed name binding at " + path + "; proper form is [exprefix, \"given\", object, expression]";
+					}
+				case ".":
+				/* jshint +W086 */
+					if(s.length != 4) {
+						if(!err) {
+							err = "E035 malformed member selection at " + path + "; proper form is [exprefix, \".\", object, name]";
+						}
+						throw new Error(err);
+					}
+					var ret = new Node(path ? path : "/", new Op(s[1], [unserialize(s[2], exprefix, path + "/" + 2), unserialize(s[3], exprefix, path + "/" + 3)]));
+					ret.value.args[0].parent = ret.value.args[1].parent = ret;
+					return ret;
+				default:
+					throw new Error("E030 malformed expression at " + path);
+			}
+		}
+	} else if(s === null || typeof s === "number" || typeof s === "string" || typeof s === "boolean") {
+		return new Node(path ? path : "/", s);
+	} else if(typeof s === "object") {
+		var ret = new Node(path ? path : "/", {});
+		for(var k in s) {
+			if(s.hasOwnProperty(k)) {
+				ret.value[k] = unserialize(s[k], exprefix, path + "/" + escapeJSONPointer(k));
+				ret.value[k].parent = ret;
+			}
+		}
+		return ret;
+	} else {
+		throw new Error("E028 cannot unserialize a " + typeof s);
 	}
 };
 
@@ -217,3 +294,4 @@ Node.prototype.eval = function(globals, args) {
 module.exports.Op = Op;
 module.exports.Node = Node;
 module.exports.Func = Func;
+module.exports.unserialize = unserialize;
