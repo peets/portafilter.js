@@ -53,12 +53,12 @@ function nameNud(t) {
 function openArrayNud(t) {
 	var a = [];
 	var n = new tree.Node(this.whereAt, a);
-	if(this.val != "]") {
+	if(t.val !== "]") {
 		while(true) {
 			element = parse(t, 0);
 			element.parent = n;
 			a.push(element);
-			if(t.val != ",") {
+			if(t.val !== ",") {
 				break;
 			}
 			t.checkValAndToke(",");
@@ -71,7 +71,7 @@ function openArrayNud(t) {
 function openObjectNud(t) {
 	var o = {};
 	var n = new tree.Node(this.whereAt, o);
-	if(this.val != "}") {
+	if(t.val !== "}") {
 		while(true) {
 			var k = t.val;
 			t.checkTypeAndToke("string");
@@ -79,7 +79,7 @@ function openObjectNud(t) {
 			var v = parse(t, 0);
 			v.parent = n;
 			o[k] = v;
-			if(t.val != ",") {
+			if(t.val !== ",") {
 				break;
 			}
 			t.checkValAndToke(",");
@@ -94,7 +94,7 @@ function letNud(t) {
 	t.checkValAndToke("(");
 	var o = {};
 	var oN = new tree.Node(t.whereAt(), o);
-	if(this.val !== ")") {
+	if(t.val !== ")") {
 		while(true) {
 			var k = t.val;
 			t.checkTypeAndToke("name");

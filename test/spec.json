@@ -1,0 +1,231 @@
+{
+"literals": [
+{
+	"name": "null",
+	"scripty": "null",
+	"serialized": null,
+	"evald": null
+}, {
+	"name": "true",
+	"scripty": "true",
+	"serialized": true,
+	"evald": true
+}, {
+	"name": "false",
+	"scripty": "false",
+	"serialized": false,
+	"evald": false
+}, {
+	"name": "basic string",
+	"scripty": "\"abc\"",
+	"serialized": "abc",
+	"evald": "abc"
+}, {
+	"name": "integer",
+	"scripty": "123",
+	"serialized": 123,
+	"evald": 123
+}, {
+	"name": "zero",
+	"scripty": "0",
+	"serialized": 0,
+	"evald": 0 
+}, {
+	"name": "float",
+	"scripty": "123.456",
+	"serialized": 123.456,
+	"evald": 123.456
+}, {
+	"name": "float zero",
+	"scripty": "0.0",
+	"serialized": 0.0,
+	"evald": 0
+}, {
+	"name": "float zero with repeated decimal zeroes",
+	"scripty": "0.000",
+	"serialized": 0.000,
+	"evald": 0
+}, {
+	"name": "fractional",
+	"scripty": "0.123",
+	"serialized": 0.123,
+	"evald": 0.123
+}, {
+	"name": "negative number",
+	"scripty": "-123",
+	"serialized": -123,
+	"evald": -123
+}, {
+	"name": "number with exponent part",
+	"scripty": "123.4e5",
+	"serialized": 123.4e5,
+	"evald": 123.4e5
+}, {
+	"name": "number with explicitly positive exponent part",
+	"scripty": "0.123e+12",
+	"serialized": 0.123e+12,
+	"evald": 0.123e+12
+}, {
+	"name": "number with negative exponent part",
+	"scripty": "9e-10",
+	"serialized": 9e-10,
+	"evald": 9e-10
+}, {
+	"name": "number with zero exponent part",
+	"scripty": "-87.06e0",
+	"serialized": -87.06e0,
+	"evald": -87.06e0
+}, {
+	"name": "number with capital exponent signifier",
+	"scripty": "-60.5E-4",
+	"serialized": -60.5E-4,
+	"evald": -60.5E-4
+}, {
+	"name": "empty array",
+	"scripty": "[]",
+	"serialized": [],
+	"evald": []
+}, {
+	"name": "mixed content array",
+	"scripty": "[1, \"a\", null, [true, false]]",
+	"serialized": [1, "a", null, [true ,false]],
+	"evald": [1, "a", null, [true, false]]
+}, {
+	"name": "empty object",
+	"scripty": "{}",
+	"serialized": {},
+	"evald": {}
+}, {
+	"name": "mixed content object",
+	"scripty": "{\"1\": \"a\", \"bc\": null, \"d\": [true, false, {\"e\": 23}]}",
+	"serialized": {"1": "a", "bc": null, "d": [true ,false, {"e": 23}]},
+	"evald": {"1": "a", "bc": null, "d": [true ,false, {"e": 23}]}
+}], 
+
+
+"name binding": [
+{
+	"name": "empty",
+	"scripty": "let () 123",
+	"serialized": ["X", "given", {}, 123],
+	"evald": 123
+}, {
+	"name": "unused",
+	"scripty": "let (a = true) 123",
+	"serialized": ["X", "given", {"a": true}, 123],
+	"evald": 123
+}, {
+	"name": "scalar",
+	"scripty": "let (a = 1, b=2) a + b",
+	"serialized": ["X", "given", {"a": 1, "b": 2}, ["X", "`", ["X", "~", "+"], [["X", "~", "a"], ["X", "~", "b"]]]],
+	"evald": 3
+}, {
+	"name": "array and object",
+	"scripty": "let (a= {\"foo\": \"bar\"}, b =[1, 2]) [a, b]",
+	"serialized": ["X", "given", {"a": {"foo": "bar"}, "b": [1, 2]}, [["X", "~", "a"], ["X", "~", "b"]]],
+	"evald": [{"foo": "bar"}, [1, 2]]
+}, {
+	"name": "nested",
+	"scripty": "let (a = 1) let (b = 2) let (c = 3) [a, b, c]",
+	"serialized": ["X", "given", {"a": 1}, ["X", "given", {"b": 2}, ["X", "given", {"c": 3}, [["X", "~", "a"], ["X", "~", "b"], ["X", "~", "c"]]]]],
+	"evald": [1, 2, 3]
+}, {
+	"name": "shadowed",
+	"scripty": "let (a = \"yep\") let (a = \"nope!\") a",
+	"serialized": ["X", "given", {"a": "yep"}, ["X", "given", {"a": "nope!"}, ["X", "~", "a"]]],
+	"evald": "nope!"
+}, {
+	"name": "shadowed with sibling",
+	"scripty": "let (a = \"yep\", b=\"uhuh\") let (a = \"nope!\") [a, b]",
+	"serialized": ["X", "given", {"a": "yep", "b": "uhuh"}, ["X", "given", {"a": "nope!"}, [["X", "~", "a"], ["X", "~", "b"]]]],
+	"evald": ["nope!", "uhuh"]
+}, {
+	"name": "evald",
+	"scripty": "let (a = 1 + 2) a + 3",
+	"serialized": ["X", "given", {"a": ["X", "`", ["X", "~", "+"], [1, 2]]}, ["X", "`", ["X", "~", "+"], [["X", "~", "a"], 3]]],
+	"evald": 6
+}, {
+	"name": "evald/nested",
+	"scripty": "let (a = let (b = 1) b + 1) a + 1",
+	"serialized": ["X", "given", {"a": ["X", "given", {"b": 1}, ["X", "`", ["X", "~", "+"], [["X", "~", "b"], 1]]]}, ["X", "`", ["X", "~", "+"], [["X", "~", "a"], 1]]],
+	"evald": 3
+}],
+
+
+"member selection": [
+{
+	"name": "by identifier",
+	"scripty": "let (a = {\"b\": 42}) a.b",
+	"serialized": ["X", "given", {"a": {"b": 42}}, ["X", ".", ["X", "~", "a"], "b"]],
+	"evald": 42
+}, {
+	"name": "by identifier among many",
+	"scripty": "let (a = {\"a\": 1, \"b\": 2}, b = {\"a\": 3, \"b\": 4}) [a.a, a.b, b.a, b.b]",
+	"serialized": ["X", "given", {"a": {"a": 1, "b": 2}, "b": {"a": 3, "b": 4}}, [["X", ".", ["X", "~", "a"], "a"], ["X", ".", ["X", "~", "a"], "b"], ["X", ".", ["X", "~", "b"], "a"], ["X", ".", ["X", "~", "b"], "b"]]],
+	"evald": [1, 2, 3, 4]
+}, {
+	"name": "by string",
+	"scripty": "let (a = {\"b\": 42}) a[\"b\"]",
+	"serialized": ["X", "given", {"a": {"b": 42}}, ["X", ".", ["X", "~", "a"], "b"]],
+	"evald": 42
+}, {
+	"name": "by string among many",
+	"scripty": "let (a = {\"a\": 1, \"b\": 2}, b = {\"a\": 3, \"b\": 4}) [a[\"a\"], a[\"b\"], b[\"a\"], b[\"b\"]]",
+	"serialized": ["X", "given", {"a": {"a": 1, "b": 2}, "b": {"a": 3, "b": 4}}, [["X", ".", ["X", "~", "a"], "a"], ["X", ".", ["X", "~", "a"], "b"], ["X", ".", ["X", "~", "b"], "a"], ["X", ".", ["X", "~", "b"], "b"]]],
+	"evald": [1, 2, 3, 4]
+}, {
+	"name": "by expression",
+	"scripty": "let (a = {\"b\": 42}, c = \"b\") a[c]",
+	"serialized": ["X", "given", {"a": {"b": 42}, "c": "b"}, ["X", ".", ["X", "~", "a"], ["X", "~", "c"]]],
+	"evald": 42
+}, {
+	"name": "by expression among many",
+	"scripty": "let (a = {\"a\": 1, \"b\": 2}, b = {\"a\": 3, \"b\": 4}, c = \"a\", d = \"b\") [a[c], a[d], b[c], b[d]]",
+	"serialized": ["X", "given", {"a": {"a": 1, "b": 2}, "b": {"a": 3, "b": 4}, "c": "a", "d": "b"}, [
+		["X", ".", ["X", "~", "a"], ["X", "~", "c"]], ["X", ".", ["X", "~", "a"], ["X", "~", "d"]], ["X", ".", ["X", "~", "b"], ["X", "~", "c"]], ["X", ".", ["X", "~", "b"], ["X", "~", "d"]]
+		]],
+	"evald": [1, 2, 3, 4]
+}],
+
+
+"arithmetic operators": [
+{
+	"name": "+",
+	"scripty": "0 + 1 + 2.3",
+	"serialized": ["X", "`", ["X", "~", "+"], [["X", "`", ["X", "~", "+"], [0, 1]], 2.3]],
+	"evald": 3.3
+}, {
+	"name": "-",
+	"scripty": "4.5 - 6 - 0",
+	"serialized": ["X", "`", ["X", "~", "-"], [["X", "`", ["X", "~", "-"], [4.5, 6]], 0]],
+	"evald": -1.5
+}, {
+	"name": "*",
+	"scripty": "7.8e9 * 10 * 1",
+	"serialized": ["X", "`", ["X", "~", "*"], [["X", "`", ["X", "~", "*"], [7.8e9, 10]], 1]],
+	"evald": 7.8e10
+}, {
+	"name": "/",
+	"scripty": "12 / 4 / 1",
+	"serialized": ["X", "`", ["X", "~", "/"], [["X", "`", ["X", "~", "/"], [12, 4]], 1]],
+	"evald": 3
+}, {
+	"name": "%",
+	"scripty": "14 % 13",
+	"serialized": ["X", "`", ["X", "~", "%"], [14, 13]],
+	"evald": 1
+}],
+
+
+"functions": [
+{
+	"name": "define-and-call",
+	"scripty": "f(a, b){ a + b }(1, 2)",
+	"serialized": ["X", "`", ["X", "f", ["a", "b"], ["X", "`", ["X", "~", "+"], [["X", "~", "a"], ["X", "~", "b"]]]], [1, 2]],
+	"evald": 3
+}, {
+	"name": "bind and call",
+	"scripty": "let (p = f(a, b){ a + b }) p(1, 2)",
+	"serialized": ["X", "given", {"p": ["X", "f", ["a", "b"], ["X", "`", ["X", "~", "+"], [["X", "~", "a"], ["X", "~", "b"]]]]}, ["X", "`", ["X", "~", "p"], [1, 2]]],
+	"evald": 3
+}]}

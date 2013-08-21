@@ -56,6 +56,7 @@ var unserialize = function(s, exprefix, path) {
 					}
 					var ret = new Node(path ? path : "/", new Func(path ? path : "/", unserialize(s[2], exprefix, path + "/" + 2), unserialize(s[3], exprefix, path + "/" + 3)));
 					ret.value.args.parent = ret.value.body.parent = ret;
+					ret.value.body.f = ret.value;
 					return ret;
 				case "~":
 					if(s.length != 3) {
@@ -289,6 +290,70 @@ Node.prototype.eval = function(globals, args) {
 		this.evaling = false;
 	}
 	return this.evald;
+};
+
+Node.prototype.eq = function(that) {
+	if(this.evald !== that.evald) {
+		return false;
+	}
+	if(typeof this.value !== "undefined") {
+		if(this.value instanceof Array) {
+			if(this.value.length != that.value.length) {
+				return false;
+			}
+			for(var i = 0; i < this.value.length; i++) {
+				if(!this.value[i].eq(that.value[i])) {
+					return false;
+				}
+			}
+		} else if(this.value instanceof Op) {
+			if(this.value.op != that.value.op) {
+				return false;
+			}
+			if(this.value.args.length != that.value.args.length) {
+				return false;
+			}
+			for(var i = 0; i < this.value.args.length; i++) {
+				if(!this.value.args[i].eq(that.value.args[i])) {
+					return false;
+				}
+			}
+		} else if(this.value instanceof Func) {
+			if(!this.value.body.eq(that.value.body)) {
+				return false;
+			}
+			if(this.value.args.length != that.value.args.length) {
+				return false;
+			}
+			for(var i = 0; i < this.value.args.length; i++) {
+				if(!this.value.args[i].eq(that.value.args[i])) {
+					return false;
+				}
+			}
+		} else if(this.value && typeof this.value === "object") {
+			for(var k in this.value) {
+				if(this.value.hasOwnProperty(k)) {
+					if(that.value.hasOwnProperty(k)) {
+						if(!this.value[k].eq(that.value[k])) {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				}
+			}
+			for(k in that.value) {
+				if(that.value.hasOwnProperty(k)) {
+					if(!this.value.hasOwnProperty(k)) {
+						return false;
+					}
+				}
+			}
+		} else {
+			throw new Error("not a valid node");
+		}
+	}
+	return true;
 };
 
 module.exports.Op = Op;
