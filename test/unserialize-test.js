@@ -7,7 +7,7 @@ tree.Node.prototype.eq = function(that) {
 	if(this.evald !== that.evald) {
 		return false;
 	}
-	if(this.value != null) {
+	if(typeof this.value !== "undefined") {
 		if(this.value instanceof Array) {
 			if(this.value.length != that.value.length) {
 				return false;

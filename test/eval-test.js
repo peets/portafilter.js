@@ -1,3 +1,4 @@
+/* jshint evil: true */
 var buster = require("buster");
 var tree = require("../tree.js");
 var tokenizer = require("../tokenizer.js");
