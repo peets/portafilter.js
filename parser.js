@@ -2,8 +2,8 @@ var util = require('util');
 var tokenizer = require('./tokenizer.js');
 var tree = require('./tree.js');
 
-var Parselet = function(lbp, nud, led, val) {
-	this.lbp = lbp;
+var Parselet = function(bp, nud, led, val) {
+	this.bp = bp;
 	this.nud = nud;
 	this.led = led;
 	this.val = val;
@@ -24,7 +24,7 @@ function valNud(t) {
 }
 
 function prefixNud(t) {
-	var operand = parse(t, this.lbp);
+	var operand = parse(t, this.bp);
 	var args = new tree.Node(operand.whereAt, [operand]);
 	var name = new tree.Node(this.whereAt, this.val);
 	var operator = new tree.Node(this.whereAt, new tree.Op("~", [name]));
@@ -36,7 +36,7 @@ function prefixNud(t) {
 }
 
 function negativeNud(t) {
-	var operand = parse(t, this.lbp);
+	var operand = parse(t, this.bp);
 	if(typeof operand.evald === "number") {
 		return new tree.Node(this.whereAt, -1 * operand.evald);
 	}
@@ -149,7 +149,7 @@ function parenNud(t) {
 }
 
 function infixLed(t, left) {
-	var right = parse(t, this.lbp);
+	var right = parse(t, this.bp);
 	var operands = new tree.Node(this.whereAt, [left, right]);
 	var name = new tree.Node(this.whereAt, this.val);
 	var resolution = new tree.Node(this.whereAt, new tree.Op("~", [name]));
@@ -163,7 +163,7 @@ function infixLed(t, left) {
 function condLed(t, left) {
 	var middle = parse(t, 0);
 	t.checkValAndToke(':');
-	var right = parse(t, this.lbp);
+	var right = parse(t, this.bp);
 	var operands = new tree.Node(this.whereAt, [left, middle, right]);
 	var name = new tree.Node(this.whereAt, this.val);
 	var resolution = new tree.Node(this.whereAt, new tree.Op("~", [name]));
@@ -219,7 +219,6 @@ var ops = {
 	"]":  new Parselet(0,  defaultNud,    defaultLed),
 	"}":  new Parselet(0,  defaultNud,    defaultLed),
 	"{":  new Parselet(0,  openObjectNud, defaultLed),
-	"!":  new Parselet(0,  prefixNud,     defaultLed),
 	"?":  new Parselet(10, defaultNud,    condLed),
 	"||": new Parselet(20, defaultNud,    infixLed),
 	"&&": new Parselet(30, defaultNud,    infixLed),
@@ -234,9 +233,10 @@ var ops = {
 	"*":  new Parselet(70, defaultNud,    infixLed),
 	"/":  new Parselet(70, defaultNud,    infixLed),
 	"%":  new Parselet(70, defaultNud,    infixLed),
-	"(":  new Parselet(80, parenNud,      callLed),
-	".":  new Parselet(80, defaultNud,    selectLed),
-	"[":  new Parselet(80, openArrayNud,  selectLed),
+	"!":  new Parselet(80, prefixNud,     defaultLed),
+	"(":  new Parselet(90, parenNud,      callLed),
+	".":  new Parselet(90, defaultNud,    selectLed),
+	"[":  new Parselet(90, openArrayNud,  selectLed),
 };
 for(var op in ops) {
 	ops[op].val = op;
@@ -277,7 +277,7 @@ var parse = function(t, rbp) {
 	p = getParselet(t);
 	t.toke();
 	left = p.nud(t);
-	for(p = getParselet(t); p && rbp < p.lbp; p = getParselet(t)) {
+	for(p = getParselet(t); p && rbp < p.bp; p = getParselet(t)) {
 		t.toke();
 		left = p.led(t, left);
 	}

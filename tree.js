@@ -67,7 +67,7 @@ var unserialize = function(s, exprefix, path) {
 					return ret;
 				case "`":
 					err = "E033 malformed function call at " + path + "; proper form is [exprefix, \"`\", function, arguments]";
-				/* jshint -W086 */ // jshint doesn't like it when we fallthrough to the next case
+				/* jshint -W086 */ // linter doesn't like it when we fallthrough to the next case
 				case "given":
 					if(!err) {
 						err = "E034 malformed name binding at " + path + "; proper form is [exprefix, \"given\", object, expression]";
@@ -296,62 +296,69 @@ Node.prototype.eq = function(that) {
 	if(this.evald !== that.evald) {
 		return false;
 	}
-	if(typeof this.value !== "undefined") {
-		if(this.value instanceof Array) {
-			if(this.value.length != that.value.length) {
-				return false;
-			}
-			for(var i = 0; i < this.value.length; i++) {
-				if(!this.value[i].eq(that.value[i])) {
-					return false;
-				}
-			}
-		} else if(this.value instanceof Op) {
-			if(this.value.op != that.value.op) {
-				return false;
-			}
-			if(this.value.args.length != that.value.args.length) {
-				return false;
-			}
-			for(var i = 0; i < this.value.args.length; i++) {
-				if(!this.value.args[i].eq(that.value.args[i])) {
-					return false;
-				}
-			}
-		} else if(this.value instanceof Func) {
-			if(!this.value.body.eq(that.value.body)) {
-				return false;
-			}
-			if(this.value.args.length != that.value.args.length) {
-				return false;
-			}
-			for(var i = 0; i < this.value.args.length; i++) {
-				if(!this.value.args[i].eq(that.value.args[i])) {
-					return false;
-				}
-			}
-		} else if(this.value && typeof this.value === "object") {
-			for(var k in this.value) {
-				if(this.value.hasOwnProperty(k)) {
-					if(that.value.hasOwnProperty(k)) {
-						if(!this.value[k].eq(that.value[k])) {
-							return false;
-						}
-					} else {
-						return false;
-					}
-				}
-			}
-			for(k in that.value) {
-				if(that.value.hasOwnProperty(k)) {
-					if(!this.value.hasOwnProperty(k)) {
-						return false;
-					}
-				}
-			}
-		} else {
-			throw new Error("not a valid node");
+	if(typeof this.value === "undefined") {
+		if(typeof that.value === "undefined") {
+			return true;
 		}
+		return false;
+	}
+	if(this.value instanceof Array) {
+		if(!(that.value instanceof Array)) {
+			return false;
+		}
+		if(this.value.length != that.value.length) {
+			return false;
+		}
+		for(var i = 0; i < this.value.length; i++) {
+			if(!this.value[i].eq(that.value[i])) {
+				return false;
+			}
+		}
+	} else if(this.value instanceof Op) {
+		if(this.value.op != that.value.op) {
+			return false;
+		}
+		if(this.value.args.length != that.value.args.length) {
+			return false;
+		}
+		for(var i = 0; i < this.value.args.length; i++) {
+			if(!this.value.args[i].eq(that.value.args[i])) {
+				return false;
+			}
+		}
+	} else if(this.value instanceof Func) {
+		if(!this.value.body.eq(that.value.body)) {
+			return false;
+		}
+		if(this.value.args.length != that.value.args.length) {
+			return false;
+		}
+		for(var i = 0; i < this.value.args.length; i++) {
+			if(!this.value.args[i].eq(that.value.args[i])) {
+				return false;
+			}
+		}
+	} else if(this.value && typeof this.value === "object") {
+		for(var k in this.value) {
+			if(this.value.hasOwnProperty(k)) {
+				if(that.value.hasOwnProperty(k)) {
+					if(!this.value[k].eq(that.value[k])) {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
+		}
+		for(k in that.value) {
+			if(that.value.hasOwnProperty(k)) {
+				if(!this.value.hasOwnProperty(k)) {
+					return false;
+				}
+			}
+		}
+	} else {
+		throw new Error("not a valid node");
 	}
 	return true;
 };

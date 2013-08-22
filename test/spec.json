@@ -217,6 +217,514 @@
 }],
 
 
+"comparison operators": [
+{
+	"name": "number == number",
+	"scripty": "1 == 1.000",
+	"serialized": ["X", "`", ["X", "~", "=="], [1, 1.000]],
+	"evald": true
+}, {
+	"name": "number != number, not!",
+	"scripty": "1 != 1.000",
+	"serialized": ["X", "`", ["X", "~", "!="], [1, 1.000]],
+	"evald": false
+}, {
+	"name": "number == number, not!",
+	"scripty": "1 == 0.1",
+	"serialized": ["X", "`", ["X", "~", "=="], [1, 0.1]],
+	"evald": false
+}, {
+	"name": "number != number",
+	"scripty": "1 != 0.1",
+	"serialized": ["X", "`", ["X", "~", "!="], [1, 0.1]],
+	"evald": true
+}, {
+	"name": "string == string",
+	"scripty": "\"man\" == \"man\"",
+	"serialized": ["X", "`", ["X", "~", "=="], ["man", "man"]],
+	"evald": true
+}, {
+	"name": "string != string, not!",
+	"scripty": "\"man\" != \"man\"",
+	"serialized": ["X", "`", ["X", "~", "!="], ["man", "man"]],
+	"evald": false
+}, {
+	"name": "string == string, not!",
+	"scripty": "\"apples\" == \"oranges\"",
+	"serialized": ["X", "`", ["X", "~", "=="], ["apples", "oranges"]],
+	"evald": false
+}, {
+	"name": "string != string",
+	"scripty": "\"apples\" != \"oranges\"",
+	"serialized": ["X", "`", ["X", "~", "!="], ["apples", "oranges"]],
+	"evald": true
+}, {
+	"name": "null == null",
+	"scripty": "null == null",
+	"serialized": ["X", "`", ["X", "~", "=="], [null, null]],
+	"evald": true
+}, {
+	"name": "null != null, not!",
+	"scripty": "null != null",
+	"serialized": ["X", "`", ["X", "~", "!="], [null, null]],
+	"evald": false
+}, {
+	"name": "boolean == boolean",
+	"scripty": "false == false",
+	"serialized": ["X", "`", ["X", "~", "=="], [false, false]],
+	"evald": true
+}, {
+	"name": "boolean != boolean, not!",
+	"scripty": "false != false",
+	"serialized": ["X", "`", ["X", "~", "!="], [false, false]],
+	"evald": false
+}, {
+	"name": "boolean == boolean, not!",
+	"scripty": "false == true",
+	"serialized": ["X", "`", ["X", "~", "=="], [false, true]],
+	"evald": false
+}, {
+	"name": "boolean != boolean",
+	"scripty": "false != true",
+	"serialized": ["X", "`", ["X", "~", "!="], [false, true]],
+	"evald": true
+}, {
+	"name": "zero-element array == zero-element array",
+	"scripty": "[] == []",
+	"serialized": ["X", "`", ["X", "~", "=="], [[], []]],
+	"evald": true
+}, {
+	"name": "zero-element array != zero-element array, not!",
+	"scripty": "[] != []",
+	"serialized": ["X", "`", ["X", "~", "!="], [[], []]],
+	"evald": false
+}, {
+	"name": "zero-element array == one-element array, not!",
+	"scripty": "[] == [1]",
+	"serialized": ["X", "`", ["X", "~", "=="], [[], [1]]],
+	"evald": false
+}, {
+	"name": "zero-element array != one-element array",
+	"scripty": "[] != [1]",
+	"serialized": ["X", "`", ["X", "~", "!="], [[], [1]]],
+	"evald": true
+}, {
+	"name": "one-element array == zero-element array, not!",
+	"scripty": "[2] == []",
+	"serialized": ["X", "`", ["X", "~", "=="], [[2], []]],
+	"evald": false
+}, {
+	"name": "one-element array != zero-element array",
+	"scripty": "[2] != []",
+	"serialized": ["X", "`", ["X", "~", "!="], [[2], []]],
+	"evald": true
+}, {
+	"name": "array == array, one element",
+	"scripty": "[null] == [null]",
+	"serialized": ["X", "`", ["X", "~", "=="], [[null], [null]]],
+	"evald": true
+}, {
+	"name": "array != array, one element, not!",
+	"scripty": "[null] != [null]",
+	"serialized": ["X", "`", ["X", "~", "!="], [[null], [null]]],
+	"evald": false
+}, {
+	"name": "array == array, one element, not!",
+	"scripty": "[null] == [false]",
+	"serialized": ["X", "`", ["X", "~", "=="], [[null], [false]]],
+	"evald": false
+}, {
+	"name": "array != array, one element",
+	"scripty": "[null] != [false]",
+	"serialized": ["X", "`", ["X", "~", "!="], [[null], [false]]],
+	"evald": true
+}, {
+	"name": "array == array, multiple elements",
+	"scripty": "[1, [2, 3]] == [1, [2, 3]]",
+	"serialized": ["X", "`", ["X", "~", "=="], [[1, [2, 3]], [1, [2, 3]]]],
+	"evald": true
+}, {
+	"name": "array != array, multiple elements, not!",
+	"scripty": "[1, [2, 3]] != [1, [2, 3]]",
+	"serialized": ["X", "`", ["X", "~", "!="], [[1, [2, 3]], [1, [2, 3]]]],
+	"evald": false
+}, {
+	"name": "array == array, multiple elements, not!",
+	"scripty": "[1, [2, 3]] == [1, [2, 4]]",
+	"serialized": ["X", "`", ["X", "~", "=="], [[1, [2, 3]], [1, [2, 4]]]],
+	"evald": false
+}, {
+	"name": "array != array, multiple elements",
+	"scripty": "[1, [2, 3]] != [1, [2, 4]]",
+	"serialized": ["X", "`", ["X", "~", "!="], [[1, [2, 3]], [1, [2, 4]]]],
+	"evald": true
+}, {
+	"name": "array == array, second is shorter",
+	"scripty": "[1, 2, 3] == [4, 5]",
+	"serialized": ["X", "`", ["X", "~", "=="], [[1, 2, 3], [4, 5]]],
+	"evald": false
+}, {
+	"name": "array != array, second is shorter, not!",
+	"scripty": "[1, 2, 3] != [4, 5]",
+	"serialized": ["X", "`", ["X", "~", "!="], [[1, 2, 3], [4, 5]]],
+	"evald": true
+}, {
+	"name": "array == array, second is longer",
+	"scripty": "[6, 7] == [8, 9, 0]",
+	"serialized": ["X", "`", ["X", "~", "=="], [[6, 7], [8, 9, 0]]],
+	"evald": false
+}, {
+	"name": "array != array, second is longer, not!",
+	"scripty": "[6, 7] != [8, 9, 0]",
+	"serialized": ["X", "`", ["X", "~", "!="], [[6, 7], [8, 9, 0]]],
+	"evald": true
+}, {
+	"name": "object == object, zero members",
+	"scripty": "{} == {}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{}, {}]],
+	"evald": true
+}, {
+	"name": "object != object, zero members, not!",
+	"scripty": "{} != {}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{}, {}]],
+	"evald": false
+}, {
+	"name": "object == object, one member",
+	"scripty": "{\"a\": 1} == {\"a\": 1}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{"a": 1}, {"a": 1}]],
+	"evald": true
+}, {
+	"name": "object != object, one member, not!",
+	"scripty": "{\"a\": 1} != {\"a\": 1}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{"a": 1}, {"a": 1}]],
+	"evald": false
+}, {
+	"name": "object == object, one member, different key",
+	"scripty": "{\"a\": 1} == {\"b\": 1}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{"a": 1}, {"b": 1}]],
+	"evald": false
+}, {
+	"name": "object != object, one member, different key, not!",
+	"scripty": "{\"a\": 1} != {\"b\": 1}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{"a": 1}, {"b": 1}]],
+	"evald": true
+}, {
+	"name": "object == object, one member, different value",
+	"scripty": "{\"a\": 1} == {\"a\": -1}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{"a": 1}, {"a": -1}]],
+	"evald": false
+}, {
+	"name": "object != object, one member, different value, not!",
+	"scripty": "{\"a\": 1} != {\"a\": -1}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{"a": 1}, {"a": -1}]],
+	"evald": true
+}, {
+	"name": "object == object, many members",
+	"scripty": "{\"a\": 1, \"b\": {\"c\": 2, \"d\": 3}} == {\"a\": 1, \"b\": {\"c\": 2, \"d\": 3}}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{"a": 1, "b": {"c": 2, "d": 3}}, {"a": 1, "b": {"c": 2, "d": 3}}]],
+	"evald": true
+}, {
+	"name": "object != object, many members, not!",
+	"scripty": "{\"a\": 1, \"b\": {\"c\": 2, \"d\": 3}} != {\"a\": 1, \"b\": {\"c\": 2, \"d\": 3}}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{"a": 1, "b": {"c": 2, "d": 3}}, {"a": 1, "b": {"c": 2, "d": 3}}]],
+	"evald": false
+}, {
+	"name": "object == object, many members, different key, not!",
+	"scripty": "{\"a\": 1, \"b\": {\"c\": 2, \"d\": 3}} == {\"a\": 1, \"b\": {\"c\": 2, \"e\": 3}}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{"a": 1, "b": {"c": 2, "d": 3}}, {"a": 1, "b": {"c": 2, "e": 3}}]],
+	"evald": false
+}, {
+	"name": "object != object, many members, different key",
+	"scripty": "{\"a\": 1, \"b\": {\"c\": 2, \"d\": 3}} != {\"a\": 1, \"b\": {\"c\": 2, \"e\": 3}}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{"a": 1, "b": {"c": 2, "d": 3}}, {"a": 1, "b": {"c": 2, "e": 3}}]],
+	"evald": true
+}, {
+	"name": "object == object, many members, different value, not!",
+	"scripty": "{\"a\": 1, \"b\": {\"c\": 2, \"d\": 3}} == {\"a\": 1, \"b\": {\"c\": 2, \"d\": 4}}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{"a": 1, "b": {"c": 2, "d": 3}}, {"a": 1, "b": {"c": 2, "d": 4}}]],
+	"evald": false
+}, {
+	"name": "object != object, many members, different value",
+	"scripty": "{\"a\": 1, \"b\": {\"c\": 2, \"d\": 3}} != {\"a\": 1, \"b\": {\"c\": 2, \"d\": 4}}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{"a": 1, "b": {"c": 2, "d": 3}}, {"a": 1, "b": {"c": 2, "d": 4}}]],
+	"evald": true
+}, {
+	"name": "object == object, many members, different property type, not!",
+	"scripty": "{\"a\": 1, \"b\": {\"c\": 2, \"d\": 3}} == {\"a\": 1, \"b\": 4}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{"a": 1, "b": {"c": 2, "d": 3}}, {"a": 1, "b": 4}]],
+	"evald": false
+}, {
+	"name": "object != object, many members, different property type",
+	"scripty": "{\"a\": 1, \"b\": {\"c\": 2, \"d\": 3}} != {\"a\": 1, \"b\": 4}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{"a": 1, "b": {"c": 2, "d": 3}}, {"a": 1, "b": 4}]],
+	"evald": true
+}, {
+	"name": "zero-member object == one-member object, not!",
+	"scripty": "{} == {\"a\": 1}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{}, {"a": 1}]],
+	"evald": false
+}, {
+	"name": "zero-member object != one-member object",
+	"scripty": "{} != {\"a\": 1}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{}, {"a": 1}]],
+	"evald": true
+}, {
+	"name": "zero-member object == many-member object, not!",
+	"scripty": "{} == {\"a\": 1, \"b\": 2, \"c\": 3}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{}, {"a": 1, "b": 2, "c": 3}]],
+	"evald": false
+}, {
+	"name": "zero-member object != many-member object",
+	"scripty": "{} != {\"a\": 1, \"b\": 2, \"c\": 3}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{}, {"a": 1, "b": 2, "c": 3}]],
+	"evald": true
+}, {
+	"name": "one-member object == zero-member object, not!",
+	"scripty": "{\"a\": \"b\"} == {}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{"a": "b"}, {}]],
+	"evald": false
+}, {
+	"name": "one-member object != zero-member object",
+	"scripty": "{\"a\": \"b\"} != {}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{"a": "b"}, {}]],
+	"evald": true
+}, {
+	"name": "one-member object == many-member object, not!",
+	"scripty": "{\"c\": true} == {\"foo\": 1, \"bar\": 2, \"baz\": 3, \"c\": true}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{"c": true}, {"foo": 1, "bar": 2, "baz": 3, "c": true}]],
+	"evald": false
+}, {
+	"name": "one-member object != many-member object",
+	"scripty": "{\"c\": true} != {\"foo\": 1, \"bar\": 2, \"baz\": 3, \"c\": true}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{"c": true}, {"foo": 1, "bar": 2, "baz": 3, "c": true}]],
+	"evald": true
+}, {
+	"name": "many-member object == zero-member object, not!",
+	"scripty": "{\"herp\": \"derp\", \"foo\": \"bar\"} == {}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{"herp": "derp", "foo": "bar"}, {}]],
+	"evald": false
+}, {
+	"name": "many-member object != zero-member object",
+	"scripty": "{\"herp\": \"derp\", \"foo\": \"bar\"} != {}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{"herp": "derp", "foo": "bar"}, {}]],
+	"evald": true
+}, {
+	"name": "many-member object == one-member object, not!",
+	"scripty": "{\"herp\": \"derp\", \"foo\": \"bar\"} == {\"herp\": \"derp\"}",
+	"serialized": ["X", "`", ["X", "~", "=="], [{"herp": "derp", "foo": "bar"}, {"herp": "derp"}]],
+	"evald": false
+}, {
+	"name": "many-member object != one-member object",
+	"scripty": "{\"herp\": \"derp\", \"foo\": \"bar\"} != {\"herp\": \"derp\"}",
+	"serialized": ["X", "`", ["X", "~", "!="], [{"herp": "derp", "foo": "bar"}, {"herp": "derp"}]],
+	"evald": true
+}, {
+	"name": "number > number, greater",
+	"scripty": "2 > 0.2",
+	"serialized": ["X", "`", ["X", "~", ">"], [2, 0.2]],
+	"evald": true
+}, {
+	"name": "number > number, equal",
+	"scripty": "2 > 2",
+	"serialized": ["X", "`", ["X", "~", ">"], [2, 2]],
+	"evald": false
+}, {
+	"name": "number > number, smaller",
+	"scripty": "0.2 > 2",
+	"serialized": ["X", "`", ["X", "~", ">"], [0.2, 2]],
+	"evald": false
+}, {
+	"name": "string > string, greater",
+	"scripty": "\"b\" > \"a\"",
+	"serialized": ["X", "`", ["X", "~", ">"], ["b", "a"]],
+	"evald": true
+}, {
+	"name": "string > string, equal",
+	"scripty": "\"aaa\" > \"aaa\"",
+	"serialized": ["X", "`", ["X", "~", ">"], ["aaa", "aaa"]],
+	"evald": false
+}, {
+	"name": "string > string, smaller",
+	"scripty": "\"aaa\" > \"b\"",
+	"serialized": ["X", "`", ["X", "~", ">"], ["aaa", "b"]],
+	"evald": false
+}, {
+	"name": "number >= number, greater",
+	"scripty": "2 >= 0.2",
+	"serialized": ["X", "`", ["X", "~", ">="], [2, 0.2]],
+	"evald": true
+}, {
+	"name": "number >= number, equal",
+	"scripty": "2 >= 2",
+	"serialized": ["X", "`", ["X", "~", ">="], [2, 2]],
+	"evald": true
+}, {
+	"name": "number >= number, smaller",
+	"scripty": "0.2 >= 2",
+	"serialized": ["X", "`", ["X", "~", ">="], [0.2, 2]],
+	"evald": false
+}, {
+	"name": "string >= string, greater",
+	"scripty": "\"b\" >= \"a\"",
+	"serialized": ["X", "`", ["X", "~", ">="], ["b", "a"]],
+	"evald": true
+}, {
+	"name": "string >= string, equal",
+	"scripty": "\"b\" >= \"b\"",
+	"serialized": ["X", "`", ["X", "~", ">="], ["b", "b"]],
+	"evald": true
+}, {
+	"name": "string >= string, smaller",
+	"scripty": "\"aaa\" >= \"b\"",
+	"serialized": ["X", "`", ["X", "~", ">="], ["aaa", "b"]],
+	"evald": false
+}, {
+	"name": "number < number, greater",
+	"scripty": "2 < 0.2",
+	"serialized": ["X", "`", ["X", "~", "<"], [2, 0.2]],
+	"evald": false
+}, {
+	"name": "number < number, equal",
+	"scripty": "0.2 < 0.2",
+	"serialized": ["X", "`", ["X", "~", "<"], [0.2, 0.2]],
+	"evald": false
+}, {
+	"name": "number < number, smaller",
+	"scripty": "0.2 < 2",
+	"serialized": ["X", "`", ["X", "~", "<"], [0.2, 2]],
+	"evald": true
+}, {
+	"name": "string < string, greater",
+	"scripty": "\"b\" < \"a\"",
+	"serialized": ["X", "`", ["X", "~", "<"], ["b", "a"]],
+	"evald": false
+}, {
+	"name": "string < string, equal",
+	"scripty": "\"b\" < \"b\"",
+	"serialized": ["X", "`", ["X", "~", "<"], ["b", "b"]],
+	"evald": false
+}, {
+	"name": "string < string, smaller",
+	"scripty": "\"aaa\" < \"b\"",
+	"serialized": ["X", "`", ["X", "~", "<"], ["aaa", "b"]],
+	"evald": true
+}, {
+	"name": "number <= number, greater",
+	"scripty": "2 <= 0.2",
+	"serialized": ["X", "`", ["X", "~", "<="], [2, 0.2]],
+	"evald": false
+}, {
+	"name": "number <= number, equal",
+	"scripty": "2 <= 2",
+	"serialized": ["X", "`", ["X", "~", "<="], [2, 2]],
+	"evald": true 
+}, {
+	"name": "number <= number, smaller",
+	"scripty": "0.2 <= 2",
+	"serialized": ["X", "`", ["X", "~", "<="], [0.2, 2]],
+	"evald": true
+}, {
+	"name": "string <= string, greater",
+	"scripty": "\"b\" <= \"a\"",
+	"serialized": ["X", "`", ["X", "~", "<="], ["b", "a"]],
+	"evald": false
+}, {
+	"name": "string <= string, equal",
+	"scripty": "\"b\" <= \"b\"",
+	"serialized": ["X", "`", ["X", "~", "<="], ["b", "b"]],
+	"evald": true
+}, {
+	"name": "string <= string, smaller",
+	"scripty": "\"aaa\" <= \"b\"",
+	"serialized": ["X", "`", ["X", "~", "<="], ["aaa", "b"]],
+	"evald": true
+}],
+
+
+"logical operators": [
+{
+	"name": "!true",
+	"scripty": "!true",
+	"serialized": ["X", "`", ["X", "~", "!"], [true]],
+	"evald": false
+} , {
+	"name": "!false",
+	"scripty": "!false",
+	"serialized": ["X", "`", ["X", "~", "!"], [false]],
+	"evald": true
+} , {
+	"name": "!true-expr",
+	"scripty": "!(1 == 1)",
+	"serialized": ["X", "`", ["X", "~", "!"], [["X", "`", ["X", "~", "=="], [1, 1]]]],
+	"evald": false
+} , {
+	"name": "!false-expr",
+	"scripty": "!(1 != 1)",
+	"serialized": ["X", "`", ["X", "~", "!"], [["X", "`", ["X", "~", "!="], [1, 1]]]],
+	"evald": true
+}, {
+	"name": "true or true",
+	"scripty": "true || !false",
+	"serialized": ["X", "`", ["X", "~", "||"], [true, ["X", "`", ["X", "~", "!"], [false]]]],
+	"evald": true
+}, {
+	"name": "true or false",
+	"scripty": "true || !true",
+	"serialized": ["X", "`", ["X", "~", "||"], [true, ["X", "`", ["X", "~", "!"], [true]]]],
+	"evald": true
+}, {
+	"name": "false or true",
+	"scripty": "!true || true",
+	"serialized": ["X", "`", ["X", "~", "||"], [["X", "`", ["X", "~", "!"], [true]], true]],
+	"evald": true
+}, {
+	"name": "false or false",
+	"scripty": "!true || false",
+	"serialized": ["X", "`", ["X", "~", "||"], [["X", "`", ["X", "~", "!"], [true]], false]],
+	"evald": false
+}, {
+	"name": "true and true",
+	"scripty": "true && !false",
+	"serialized": ["X", "`", ["X", "~", "&&"], [true, ["X", "`", ["X", "~", "!"], [false]]]],
+	"evald": true
+}, {
+	"name": "true and false",
+	"scripty": "true && !true",
+	"serialized": ["X", "`", ["X", "~", "&&"], [true, ["X", "`", ["X", "~", "!"], [true]]]],
+	"evald": false
+}, {
+	"name": "false and true",
+	"scripty": "!true && true",
+	"serialized": ["X", "`", ["X", "~", "&&"], [["X", "`", ["X", "~", "!"], [true]], true]],
+	"evald": false
+}, {
+	"name": "false and false",
+	"scripty": "!true && false",
+	"serialized": ["X", "`", ["X", "~", "&&"], [["X", "`", ["X", "~", "!"], [true]], false]],
+	"evald": false
+}, {
+	"name": "unmet condition",
+	"scripty": "false ? \"wat\" : \"phew\"",
+	"serialized": ["X", "`", ["X", "~", "?"], [false, "wat", "phew"]],
+	"evald": "phew"
+}, {
+	"name": "met condition",
+	"scripty": "true ? \"bang\" + \"arang\" : \"NOPE\"",
+	"serialized": ["X", "`", ["X", "~", "?"], [true, ["X", "`", ["X", "~", "+"], ["bang", "arang"]], "NOPE"]],
+	"evald": "bangarang"
+}, {
+	"name": "unmet condition expression",
+	"scripty": "0.9999 == 1 ? \"wat\" : \"math\" + \"ematical!\"",
+	"serialized": ["X", "`", ["X", "~", "?"], [["X", "`", ["X", "~", "=="], [0.9999, 1]], "wat", ["X", "`", ["X", "~", "+"], ["math", "ematical!"]]]],
+	"evald": "mathematical!"
+}, {
+	"name": "met condition expression",
+	"scripty": "0.9999 <= 1 ? \"math\" + \"ematical!\" : false && false",
+	"serialized": ["X", "`", ["X", "~", "?"], [["X", "`", ["X", "~", "<="], [0.9999, 1]], ["X", "`", ["X", "~", "+"], ["math", "ematical!"]], ["X", "`", ["X", "~", "&&"], [false, false]]]],
+	"evald": "mathematical!"
+}],
+
+
 "functions": [
 {
 	"name": "define-and-call",
