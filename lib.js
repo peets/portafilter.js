@@ -1,42 +1,31 @@
 var util = require("util");
 var tree = require("./tree.js");
+var e = require("./eval.js");
 
-var t_eq = function(args) {
+var t_eq = function(a, b) {
 	// we're assuming both operands have the same type
-	if(args[0] instanceof Array) {
-		if(args[0].length != args[1].length) {
+	if(a instanceof Array) {
+		if(a.length != b.length) {
 			return false;
 		}
-		for(var i = 0; i < args[0].length; i++) {
-			if(typeStr(args[0][i]) !== typeStr(args[1][i])) {
+		for(var i = 0; i < a.length; i++) {
+			if(typeStr(a[i]) !== typeStr(b[i])) {
 				return false;
 			}
-			if(!t_eq([args[0][i], args[1][i]])) {
-				return false;
-			}
-		}
-	} else if(args[0] === null || typeof args[0] === "string" || typeof args[0] === "number" || typeof args[0] === "boolean") {
-		return args[0] === args[1];
-	} else if(args[0] instanceof tree.Func) {
-		if(!args[0].body.eq(args[1].body)) {
-			return false;
-		}
-		if(args[0].args.length != args[1].args.length) {
-			return false;
-		}
-		for(var i = 0; i < args[0].args.length; i++) {
-			if(args[0].args[i] !== args[1].args[i]) {
+			if(!t_eq(a[i], b[i])) {
 				return false;
 			}
 		}
-	} else if(typeof args[0] === "object") {
-		for(var k in args[0]) {
-			if(args[0].hasOwnProperty(k)) {
-				if(args[1].hasOwnProperty(k)) {
-					if(typeStr(args[0][k]) !== typeStr(args[1][k])) {
+	} else if(a === null || typeof a !== "object") {
+		return a === b;
+	} else if(typeof a === "object") {
+		for(var k in a) {
+			if(a.hasOwnProperty(k)) {
+				if(b.hasOwnProperty(k)) {
+					if(typeStr(a[k]) !== typeStr(b[k])) {
 						return false;
 					}
-					if(!t_eq([args[0][k], args[1][k]])) {
+					if(!t_eq(a[k], b[k])) {
 						return false;
 					}
 				} else {
@@ -44,15 +33,15 @@ var t_eq = function(args) {
 				}
 			}
 		}
-		for(k in args[1]) {
-			if(args[1].hasOwnProperty(k)) {
-				if(!args[0].hasOwnProperty(k)) {
+		for(k in b) {
+			if(b.hasOwnProperty(k)) {
+				if(!a.hasOwnProperty(k)) {
 					return false;
 				}
 			}
 		}
 	} else {
-		throw new Error(util.format("E036 BUG: passed un-typeable object %j to t_eq()", args[0]));
+		throw new Error(util.format("E036 BUG: passed un-typeable object %j to t_eq()", a));
 	}
 	return true;
 };
@@ -68,114 +57,171 @@ var typeStr = function(v) {
 };
 
 var sameType = function(a, b) {
-	return (a instanceof Array && b instanceof Array) || (a instanceof tree.Func && b instanceof tree.Func) || (a === null && b === null) || typeof a === typeof b;
+	return (a instanceof Array && b instanceof Array) || (a === null && b === null) || typeof a === typeof b;
 };
 
 var typeErrorFormat = "%s can't apply operator %s to operands of type %s and %s.";
+
 module.exports = {
-	"+": new tree.Func("+",  ["a", "b"], function(args) {
-		var t = typeStr(args[0]);
-		if(t !== typeStr(args[1]) || (t !== "number" && t !== "string" && t !== "array")) {
-			throw new Error(util.format(typeErrorFormat, "E037", "+", t, typeStr(args[1])));
-		}
-		return args[0] + args[1];
-	}),
-	"-": new tree.Func("-",  ["a", "b"], function(args) {
-		var t = typeStr(args[0]);
-		if(t !== typeStr(args[1]) || t !== "number") {
-			throw new Error(util.format(typeErrorFormat, "E038", "-", t, typeStr(args[1])));
-		}
-		return args[0] - args[1];
-	}),
-	"*": new tree.Func("*",  ["a", "b"], function(args) {
-		var t = typeStr(args[0]);
-		if(t !== typeStr(args[1]) || t !== "number") {
-			throw new Error(util.format(typeErrorFormat, "E039", "*", t, typeStr(args[1])));
-		}
-		return args[0] * args[1];
-	}),
-	"/": new tree.Func("/",  ["a", "b"], function(args) {
-		var t = typeStr(args[0]);
-		if(t !== typeStr(args[1]) || t !== "number") {
-			throw new Error(util.format(typeErrorFormat, "E040", "/", t, typeStr(args[1])));
-		}
-		return args[0] / args[1];
-	}),
-	"%": new tree.Func("%",  ["a", "b"], function(args) {
-		var t = typeStr(args[0]);
-		if(t !== typeStr(args[1]) || t !== "number") {
-			throw new Error(util.format(typeErrorFormat, "E041", "%", t, typeStr(args[1])));
-		}
-		return args[0] % args[1];
-	}),
-
-
-	"==": new tree.Func("==", ["a", "b"], function(args) {
-		if(!sameType(args[0], args[1])) {
-			throw new Error(util.format(typeErrorFormat, "E042", "==", typeStr(args[0]), typeStr(args[1])));
-		}
-		return t_eq(args);
-	}),
-	"!=": new tree.Func("!=", ["a", "b"], function(args) {
-		if(!sameType(args[0], args[1])) {
-			throw new Error(util.format(typeErrorFormat, "E043", "!=", typeStr(args[0]), typeStr(args[1])));
-		}
-		return !t_eq(args);
-	}),
-	">": new tree.Func(">",  ["a", "b"], function(args) {
-		var t = typeStr(args[0]);
-		if(t !== typeStr(args[1]) || (t !== "number" && t !== "string")) {
-			throw new Error(util.format(typeErrorFormat, "E044", ">", typeStr(args[0]), typeStr(args[1])));
-		}
-		return args[0] > args[1];
-	}),
-	">=": new tree.Func(">=",  ["a", "b"], function(args) {
-		var t = typeStr(args[0]);
-		if(t !== typeStr(args[1]) || (t !== "number" && t !== "string")) {
-			throw new Error(util.format(typeErrorFormat, "E045", ">=", typeStr(args[0]), typeStr(args[1])));
-		}
-		return args[0] >= args[1];
-	}),
-	"<": new tree.Func("<",  ["a", "b"], function(args) {
-		var t = typeStr(args[0]);
-		if(t !== typeStr(args[1]) || (t !== "number" && t !== "string")) {
-			throw new Error(util.format(typeErrorFormat, "E046", "<", typeStr(args[0]), typeStr(args[1])));
-		}
-		return args[0] < args[1];
-	}),
-	"<=": new tree.Func("<=",  ["a", "b"], function(args) {
-		var t = typeStr(args[0]);
-		if(t !== typeStr(args[1]) || (t !== "number" && t !== "string")) {
-			throw new Error(util.format(typeErrorFormat, "E047", "<=", typeStr(args[0]), typeStr(args[1])));
-		}
-		return args[0] <= args[1];
-	}),
-
-
-	"!": new tree.Func("!", ["a"], function(args) {
-		if(typeof args[0] !== "boolean") {
-			throw new Error("E048 can't apply operator ! to operand of type " + typeStr(args[0]) + ". It can only be applied to booleans.");
-		}
-		return !args[0];
-	}),
-	"||": new tree.Func("||", ["a", "b"], function(args) {
-		if(typeof args[0] !== "boolean" || typeof args[1] !== "boolean") {
-			throw new Error(util.format(typeErrorFormat, "E049", "||", typeStr(args[0]), typeStr(args[1])) + ". It can only be applied to booleans.");
-		}
-		return args[0] || args[1];
-	}),
-	"&&": new tree.Func("&&", ["a", "b"], function(args) {
-		if(typeof args[0] !== "boolean" || typeof args[1] !== "boolean") {
-			throw new Error(util.format(typeErrorFormat, "E050", "&&", typeStr(args[0]), typeStr(args[1])) + ". It can only be applied to booleans.");
-		}
-		return args[0] && args[1];
-	}),
-
-
-	"?": new tree.Func("?", ["a", "b", "c"], function(args) {
-		if(typeof args[0] !== "boolean") {
-			throw new Error("E051 can't apply operator ? to operand of type " + typeStr(args[0]) + ". The condition must be a boolean.");
-		}
-		return args[0] ? args[1] : args[2];
-	})
+	"value": {},
+	"eval": function(node) {
+	var f = function() {
+		return this.eval(arguments.callee.body);
+	};
+	f.args = [];
+	f.body = node;
+	f.body.parent = this;
+	return f.call(new e.Context(f, []));
+	}
 };
+
+var f = function(name, args, func) {
+	func.args = args;
+	module.exports.value[name] = new tree.Node(name, func);
+};
+
+f("+", ["a", "b"], function() {
+	var a = this.resolve("a");
+	var b = this.resolve("b");
+	var t = typeStr(a);
+	if(t !== typeStr(b) || (t !== "number" && t !== "string" && t !== "array")) {
+		throw new Error(util.format(typeErrorFormat, "E037", "+", t, typeStr(b)));
+	}
+	return a + b;
+});
+f("-", ["a", "b"], function() {
+	var a = this.resolve("a");
+	var b = this.resolve("b");
+	var t = typeStr(a);
+	if(t !== typeStr(b) || t !== "number") {
+		throw new Error(util.format(typeErrorFormat, "E038", "-", t, typeStr(b)));
+	}
+	return a - b;
+});
+f("*", ["a", "b"], function() {
+	var a = this.resolve("a");
+	var b = this.resolve("b");
+	var t = typeStr(a);
+	if(t !== typeStr(b) || t !== "number") {
+		throw new Error(util.format(typeErrorFormat, "E039", "*", t, typeStr(b)));
+	}
+	return a * b;
+});
+f("/", ["a", "b"], function() {
+	var a = this.resolve("a");
+	var b = this.resolve("b");
+	var t = typeStr(a);
+	if(t !== typeStr(b) || t !== "number") {
+		throw new Error(util.format(typeErrorFormat, "E040", "/", t, typeStr(b)));
+	}
+	return a / b;
+});
+f("%", ["a", "b"], function() {
+	var a = this.resolve("a");
+	var b = this.resolve("b");
+	var t = typeStr(a);
+	if(t !== typeStr(b) || t !== "number") {
+		throw new Error(util.format(typeErrorFormat, "E041", "%", t, typeStr(b)));
+	}
+	return a % b;
+});
+
+
+f("==", ["a", "b"], function() {
+	var a = this.resolve("a");
+	var b = this.resolve("b");
+	if(!sameType(a, b)) {
+		throw new Error(util.format(typeErrorFormat, "E042", "==", typeStr(a), typeStr(b)));
+	}
+	return t_eq(a, b);
+});
+f("!=", ["a", "b"], function() {
+	var a = this.resolve("a");
+	var b = this.resolve("b");
+	if(!sameType(a, b)) {
+		throw new Error(util.format(typeErrorFormat, "E043", "!=", typeStr(a), typeStr(b)));
+	}
+	return !t_eq(a, b);
+});
+f(">", ["a", "b"], function() {
+	var a = this.resolve("a");
+	var b = this.resolve("b");
+	var t = typeStr(a);
+	if(t !== typeStr(b) || (t !== "number" && t !== "string")) {
+		throw new Error(util.format(typeErrorFormat, "E044", ">", typeStr(a), typeStr(b)));
+	}
+	return a > b;
+});
+f(">=", ["a", "b"], function() {
+	var a = this.resolve("a");
+	var b = this.resolve("b");
+	var t = typeStr(a);
+	if(t !== typeStr(b) || (t !== "number" && t !== "string")) {
+		throw new Error(util.format(typeErrorFormat, "E045", ">=", typeStr(a), typeStr(b)));
+	}
+	return a >= b;
+});
+f("<", ["a", "b"], function() {
+	var a = this.resolve("a");
+	var b = this.resolve("b");
+	var t = typeStr(a);
+	if(t !== typeStr(b) || (t !== "number" && t !== "string")) {
+		throw new Error(util.format(typeErrorFormat, "E046", "<", typeStr(a), typeStr(b)));
+	}
+	return a < b;
+});
+f("<=", ["a", "b"], function() {
+	var a = this.resolve("a");
+	var b = this.resolve("b");
+	var t = typeStr(a);
+	if(t !== typeStr(b) || (t !== "number" && t !== "string")) {
+		throw new Error(util.format(typeErrorFormat, "E047", "<=", typeStr(a), typeStr(b)));
+	}
+	return a <= b;
+});
+
+
+f("!", ["a"], function() {
+	var a = this.resolve("a");
+	if(typeof a !== "boolean") {
+		throw new Error("E048 can't apply operator ! to operand of type " + typeStr(a) + ". It can only be applied to booleans.");
+	}
+	return !a;
+});
+f("||", ["a", "b"], function() {
+	var a = this.resolve("a");
+	if(typeof a === "boolean") {
+		if(a) {
+			return true;
+		}
+		var b = this.resolve("b");
+		if(typeof b === "boolean") {
+			return b;
+		}
+	}
+	throw new Error(util.format(typeErrorFormat, "E049", "||", typeStr(a), typeStr(this.resolve("b"))) + ". It can only be applied to booleans.");
+});
+f("&&", ["a", "b"], function() {
+	var a = this.resolve("a");
+	if(typeof a === "boolean") {
+		if(!a) {
+			return false;
+		}
+		var b = this.resolve("b");
+		if(typeof b === "boolean") {
+			return b;
+		}
+	}
+	throw new Error(util.format(typeErrorFormat, "E050", "&&", typeStr(a), typeStr(this.resolve("b"))) + ". It can only be applied to booleans.");
+});
+
+f("?", ["a", "b", "c"], function() {
+	var a = this.resolve("a");
+	if(typeof a !== "boolean") {
+		throw new Error("E051 can't apply operator ? to operand of type " + typeStr(a) + ". The condition must be a boolean.");
+	}
+	if(a) {
+		return this.resolve("b");
+	}
+	return this.resolve("c");
+});

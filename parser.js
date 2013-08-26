@@ -37,8 +37,8 @@ function prefixNud(t) {
 
 function negativeNud(t) {
 	var operand = parse(t, this.bp);
-	if(typeof operand.evald === "number") {
-		return new tree.Node(this.whereAt, -1 * operand.evald);
+	if(typeof operand.value === "number") {
+		return new tree.Node(this.whereAt, -1 * operand.value);
 	}
 	throw new Error("E017" + util.format("syntax %s: expected number.", t.errPrefix()));
 }
@@ -136,7 +136,7 @@ function fNud(t) {
 	t.checkValAndToke("{");
 	var body = parse(t, 0);
 	t.checkValAndToke("}");
-	var n = new tree.Node(this.whereAt, new tree.Func(this.whereAt, aN, body));
+	var n = new tree.Node(this.whereAt, new tree.Op("f", [aN, body]));
 	aN.parent = body.parent = n;
 	body.f = n.value;
 	return n;

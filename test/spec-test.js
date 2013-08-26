@@ -35,11 +35,11 @@ function makeTest(v, i, arr) {
 				assert.equals(v.serialized, sParse.serialize("X"));
 				assert.nodesEq(zParse, sParse);
 			}
-			var e = parseTree.eval(lib, []);
+			var result = lib.eval(parseTree);
 			if(typeof v.evald !== "undefined") {
-				assert.equals(v.evald, e);
+				assert.equals(v.evald, result);
 			} else {
-				buster.assertions.fail(util.format("expected error, but got result %j", e));
+				buster.assertions.fail(util.format("expected error, but got result %j", result));
 			}
 		} catch (e) {
 			if(e.message.substr(0, 8) == "bad test") {

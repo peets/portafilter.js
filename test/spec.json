@@ -141,8 +141,8 @@
 	"evald": ["nope!", "uhuh"]
 }, {
 	"name": "evald",
-	"scripty": "let (a = 1 + 2) a + 3",
-	"serialized": ["X", "given", {"a": ["X", "`", ["X", "~", "+"], [1, 2]]}, ["X", "`", ["X", "~", "+"], [["X", "~", "a"], 3]]],
+	"scripty": "let (v = 1 + 2) v + 3",
+	"serialized": ["X", "given", {"v": ["X", "`", ["X", "~", "+"], [1, 2]]}, ["X", "`", ["X", "~", "+"], [["X", "~", "v"], 3]]],
 	"evald": 6
 }, {
 	"name": "evald/nested",
@@ -736,4 +736,17 @@
 	"scripty": "let (p = f(a, b){ a + b }) p(1, 2)",
 	"serialized": ["X", "given", {"p": ["X", "f", ["a", "b"], ["X", "`", ["X", "~", "+"], [["X", "~", "a"], ["X", "~", "b"]]]]}, ["X", "`", ["X", "~", "p"], [1, 2]]],
 	"evald": 3
+}, {
+	"name": "recurse",
+	"scripty": "let (fact = f(n){ n <= 1 ? 1 : n * fact(n-1) }) fact(5)",
+	"serialized": ["X", "given", {"fact": ["X", "f", ["n"], ["X", "`", ["X", "~", "?"], [["X", "`", ["X", "~", "<="], [["X", "~", "n"], 1]], 1,
+		["X", "`", ["X", "~", "*"], [["X", "~", "n"], ["X", "`", ["X", "~", "fact"], [["X", "`", ["X", "~", "-"], [["X", "~", "n"], 1]]]]]]]]]}, ["X", "`", ["X", "~", "fact"], [5]]],
+	"evald": 120
+}, {
+	"name": "call sibling",
+	"scripty": "let (exclaim = f(x){ x + \"!\" }, herald = f(x) { exclaim(x) + exclaim(x) }) herald(\"Extra\")",
+	"serialized": ["X", "given", {"exclaim": ["X", "f", ["x"], ["X", "`", ["X", "~", "+"], [["X", "~", "x"], "!"]]],
+	                              "herald": ["X", "f", ["x"], ["X", "`", ["X", "~", "+"], [["X", "`", ["X", "~", "exclaim"], [["X", "~", "x"]]], ["X", "`", ["X", "~", "exclaim"], [["X", "~", "x"]]]]]]},
+		["X", "`", ["X", "~", "herald"], ["Extra"]]],
+	"evald": "Extra!Extra!"
 }]}
