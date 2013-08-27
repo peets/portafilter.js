@@ -138,7 +138,6 @@ function fNud(t) {
 	t.checkValAndToke("}");
 	var n = new tree.Node(this.whereAt, new tree.Op("f", [aN, body]));
 	aN.parent = body.parent = n;
-	body.f = n.value;
 	return n;
 }
 
