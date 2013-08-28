@@ -8,7 +8,7 @@ var Context = function(func, args, parent) {
 	this.func = func;
 	this.args = args;
 	this.parent = parent;
-}
+};
 
 Context.prototype.getArg = function(name) {
 	for(var i = 0; i < this.func.args.length; i++) {
@@ -65,10 +65,13 @@ Context.prototype.resolve = function(name, node) {
 				if(bindingsNode && typeof bindingsNode.value === "object" && !(bindingsNode.value instanceof Array)) {
 					var maybe = bindingsNode.value[name];
 					if(typeof maybe !== "undefined") {
-						v = ctx.eval(maybe)
+						v = ctx.eval(maybe);
 					}
 				} else if(bindingsNode !== cur) {
 					var bindings = ctx.eval(bindingsNode);
+					if(typeof bindings !== "object" || bindings instanceof Array) {
+						throw new Error("E305 invalid name binding expression; it must result in an object.");
+					}
 					v = bindings[name];
 				}
 				if(typeof v !== "undefined") {
@@ -95,7 +98,6 @@ Context.prototype.resolve = function(name, node) {
 };
 
 Context.prototype.eval = function(node) {
-	debugger;
 	if(this.evaling[node.id]) {
 		throw new Error("E019 dependency loop at " + node.path);
 	}

@@ -1,3 +1,4 @@
+// jshint evil: true
 var util = require("util");
 var tree = require("./tree.js");
 var e = require("./eval.js");
