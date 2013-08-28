@@ -52,18 +52,7 @@ Context.prototype.resolve = function(name, node) {
 		throw new Error("E054 BUG failed to resolve arg '" + name + "' in hard function " + this.func.toString());
 	}
 	for(var cur = node; cur && cur.parent; cur = cur.parent) {
-		if(cur.parent.value instanceof Array) {
-			var ok = false;
-			if(typeof key === "string" && key.match(/^\d+$/)) {
-				key = parseInt(key, 10);
-				ok = true;
-			} else if(typeof key === "number" && key % 1 === 0) {
-				ok = true;
-			}
-			if(ok && key >= 0 && key < cur.parent.value.length) {
-				return ctx.eval(cur.parent.value[key]);
-			}
-		} else if(cur.parent.value instanceof tree.Op) {
+		if(cur.parent.value instanceof tree.Op) {
 			if(cur.parent.value.op == "given") {
 				// WEMUST: write this note in the documentation or something. Here's what's going on:
 				// when evaluating values to be bound, we can't look up in their namespace when resolving names:
