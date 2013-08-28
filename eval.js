@@ -13,19 +13,19 @@ var Context = function(func, args, parent) {
 Context.prototype.getArg = function(name) {
 	for(var i = 0; i < this.func.args.length; i++) {
 		if(this.func.args[i] == name) {
-			if(!this.parent) {
-				throw new Error("E053 BUG: ran out of context !?!");
-			}
 			var args = this.args.value;
 			var arrayLit = true;
 			if(!(args instanceof Array)) {
-				args = this.parent.eval(this.args);
 				arrayLit = false;
+				args = this.parent.eval(this.args);
+				if(!(args instanceof Array)) {
+					throw new Error("E303 invalid argument expression; it must result in an array.");
+				}
 			}
 			if(i < args.length) {
 				return arrayLit ? this.parent.eval(args[i]) : args[i];
 			} else {
-				throw new Error("E025", util.format("argument %s was not provided when function was called", name));
+				throw new Error(util.format("E025 argument %s was not provided when function was called", name));
 				// to avoid this error, supply all arguments or provide default argument values like so:
 				//
 				//     f(a, b, c) {
@@ -44,7 +44,7 @@ Context.prototype.getArg = function(name) {
 Context.prototype.resolve = function(name, node) {
 	var ctx = this;
 	if(!node) {
-		// we are in a hard function, it would be dumb to tell the user about the argument name. If argument isn't found, it's a bug.
+		// we are in a host function, it would be dumb to tell the user about the argument name. If argument isn't found, it's a bug.
 		var v = this.getArg(name);
 		if(typeof v !== "undefined") {
 			return v;
